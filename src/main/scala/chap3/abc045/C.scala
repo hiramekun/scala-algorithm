@@ -3,6 +3,7 @@ package chap3.abc045
 import java.io.PrintWriter
 import java.util.Scanner
 
+// verified with https://atcoder.jp/contests/abc045/submissions/17696811
 object Main extends App {
   val sc = new Scanner(System.in)
   val pw = new PrintWriter(System.out)
