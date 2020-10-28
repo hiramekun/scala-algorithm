@@ -1,26 +1,19 @@
 package chap3.abc081
 
-import java.io.PrintWriter
-import java.util.Scanner
+import scala.io.StdIn
 
-// fastest??
 // https://atcoder.jp/contests/abc081/submissions/17709351
 object Main extends App {
-  val sc = new Scanner(System.in)
-  val pw = new PrintWriter(System.out)
-  val n = sc.nextInt
-  val a = Array.fill(n)(sc.nextInt)
-
-  for (i <- 0 until n) {
-    var div = a(i)
+  val n = StdIn.readInt
+  val a = StdIn.readLine.split(" ").map { s =>
+    var v = s.toInt
     var count = 0
-    while (div % 2 == 0) {
-      div /= 2
+    while (v % 2 == 0) {
+      v /= 2
       count += 1
     }
-    a(i) = count
+    count
   }
 
-  pw.println(a.min)
-  pw.flush()
+  println(a.min)
 }
