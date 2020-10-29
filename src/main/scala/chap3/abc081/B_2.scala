@@ -3,7 +3,7 @@ package chap3.abc081
 import scala.io.StdIn
 
 // https://atcoder.jp/contests/abc081/submissions/17709351
-object Main extends App {
+object Main2 extends App {
   val n = StdIn.readInt
   val a = StdIn.readLine.split(" ").map { s =>
     var v = s.toInt
