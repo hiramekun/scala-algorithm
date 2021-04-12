@@ -9,7 +9,7 @@ case class BinarySearch[T](arr: Vector[T])(implicit ord: Ordering[T]) {
   def find(key: T): Int = {
     @tailrec
     def rec(l: Int, r: Int, key: T): Int = {
-      val mid = l + (r - l) / 2
+      val mid = (r + l) / 2
       if (r < l) -1
       else if (arr(mid) == key) mid
       else if (arr(mid) > key) rec(l, mid - 1, key)
@@ -19,6 +19,19 @@ case class BinarySearch[T](arr: Vector[T])(implicit ord: Ordering[T]) {
     val left = 0
     val right = arr.size - 1
     rec(left, right, key)
+  }
+
+
+  def lowerBound(key: T): Int = {
+    @tailrec
+    def rec(l: Int, r: Int): Int = {
+      val mid = (r + l) / 2
+      if (r <= l + 1) r
+      else if (arr(mid) < key) rec(mid, r)
+      else rec(l, mid)
+    }
+
+    rec(-1, arr.size)
   }
 }
 
@@ -31,5 +44,12 @@ object BinarySearch extends App {
   assert(binarySearch.find(-100) == -1)
   assert(binarySearch.find(9) == -1)
   assert(binarySearch.find(100) == -1)
-  println("Success!!")
+  println("find: Success!!")
+
+  assert(binarySearch.lowerBound( 10) == 3)
+  assert(binarySearch.lowerBound( 3) == 0)
+  assert(binarySearch.lowerBound( -100) == 0)
+  assert(binarySearch.lowerBound( 9) == 3)
+  assert(binarySearch.lowerBound(100) == arr.size)
+  println("lowerBound: Success!!")
 }
