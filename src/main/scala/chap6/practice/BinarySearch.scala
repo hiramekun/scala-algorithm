@@ -1,6 +1,12 @@
 package chap6.practice
 
+import chap6.practice.Implicits._
+
 import scala.annotation.tailrec
+
+object Implicits {
+  implicit def binarySearchWrap[T](arr: Vector[T])(implicit ord: Ordering[T]): BinarySearch[T] = BinarySearch(arr)
+}
 
 case class BinarySearch[T](arr: Vector[T])(implicit ord: Ordering[T]) {
 
@@ -9,14 +15,14 @@ case class BinarySearch[T](arr: Vector[T])(implicit ord: Ordering[T]) {
   /**
     * @return
     * the index of key element.
-    * if does not exists, return -1
+    * if does not exists, return None.
     */
-  def find(key: T): Int = {
+  def find(key: T): Option[Int] = {
     @tailrec
-    def rec(l: Int, r: Int, key: T): Int = {
+    def rec(l: Int, r: Int, key: T): Option[Int] = {
       val mid = (r + l) / 2
-      if (r < l) -1
-      else if (arr(mid) == key) mid
+      if (r < l) None
+      else if (arr(mid) == key) Some(mid)
       else if (arr(mid) > key) rec(l, mid - 1, key)
       else rec(mid + 1, r, key)
     }
@@ -28,16 +34,28 @@ case class BinarySearch[T](arr: Vector[T])(implicit ord: Ordering[T]) {
 
   /**
     * @return
-    * the minimum index which satisfies condition `arr(idx) >= key`.
-    * if any index does not satisfies the condition, return arr.size
+    * the minimum index which satisfies condition `arr(idx) > key`.
+    * if any index does not satisfies the condition, return None.
     */
-  def lowerBound(key: T): Int = {
+  def upperBound(key: T): Option[Int] = recByIndex(_ > key)
+
+  /**
+    * @return
+    * the minimum index which satisfies condition `arr(idx) >= key`.
+    * if any index does not satisfies the condition, return None.
+    */
+  def lowerBound(key: T): Option[Int] = recByIndex(_ >= key)
+
+  private def recByIndex(condition: T => Boolean): Option[Int] = {
     @tailrec
-    def rec(l: Int, r: Int): Int = {
+    def rec(l: Int, r: Int): Option[Int] = {
       val mid = (r + l) / 2
-      if (r <= l + 1) r
-      else if (arr(mid) < key) rec(mid, r)
-      else rec(l, mid)
+      if (r <= l + 1) {
+        if (r == arr.size) None
+        else Some(r)
+      }
+      else if (condition(arr(mid))) rec(l, mid)
+      else rec(mid, r)
     }
 
     rec(-1, arr.size)
@@ -47,18 +65,17 @@ case class BinarySearch[T](arr: Vector[T])(implicit ord: Ordering[T]) {
 object BinarySearch extends App {
   final val n = 8
   final val arr = Vector(3, 5, 8, 10, 14, 7, 21, 39)
-  val binarySearch = new BinarySearch[Int](arr)
-  assert(binarySearch.find(10) == 3)
-  assert(binarySearch.find(3) == 0)
-  assert(binarySearch.find(-100) == -1)
-  assert(binarySearch.find(9) == -1)
-  assert(binarySearch.find(100) == -1)
+  assert(arr.find(10).get == 3)
+  assert(arr.find(3).get == 0)
+  assert(arr.find(-100).isEmpty)
+  assert(arr.find(9).isEmpty)
+  assert(arr.find(100).isEmpty)
   println("find: Success!!")
 
-  assert(binarySearch.lowerBound( 10) == 3)
-  assert(binarySearch.lowerBound( 3) == 0)
-  assert(binarySearch.lowerBound( -100) == 0)
-  assert(binarySearch.lowerBound( 9) == 3)
-  assert(binarySearch.lowerBound(100) == arr.size)
+  assert(arr.lowerBound(10).get == 3)
+  assert(arr.lowerBound(3).get == 0)
+  assert(arr.lowerBound(-100).get == 0)
+  assert(arr.lowerBound(9).get == 3)
+  assert(arr.lowerBound(100).isEmpty)
   println("lowerBound: Success!!")
 }
