@@ -1,5 +1,4 @@
-package chap10
-
+package chap10.practice
 
 case class Edge(to: Int, w: Long)
 
