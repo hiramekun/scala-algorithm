@@ -1,6 +1,6 @@
 # scala-algorithm
 ## LeetCode
-LeetCodeの問題をScalaで解きます
+Solve LeetCode problems with Scala
 
 ## 『問題解決力を鍛える!アルゴリズムとデータ構造』を進める
 「問題解決力を鍛える!アルゴリズムとデータ構造」をScalaで進めます。  
